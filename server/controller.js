@@ -268,7 +268,7 @@ module.exports = {
             res.status(200).send(dbResult[0])
         })
         .catch((error) => {
-            console.log('Could not load data country from database', error)
+            console.log('Could not load data cities from database', error)
             res.status(400).seed(error)
         })
     },
@@ -282,7 +282,7 @@ module.exports = {
             res.status(200).send(dbResult[0])
         })
         .catch((error) => {
-            console.log('Could not load data country from database', error)
+            console.log(`Could not find record with id: ${id} from database`, error)
             res.status(400).seed(error)
         })
     }
