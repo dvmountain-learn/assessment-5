@@ -1,4 +1,7 @@
+require('dotenv').config()
 
+const Sequelize = require('sequelize')
+const sequelize = new Sequelize(process.env.CONNECTION_STRING)
 
 module.exports = {
     seed: (req, res) => {
@@ -11,7 +14,12 @@ module.exports = {
                 name varchar
             );
 
-            *****YOUR CODE HERE*****
+            create table cities (
+                city_id serial primary key,
+                name varchar,
+                rating integer,
+                country_id integer not null references countries(country_id)
+            );
 
             insert into countries (name)
             values ('Afghanistan'),
@@ -209,9 +217,73 @@ module.exports = {
             ('Yemen'),
             ('Zambia'),
             ('Zimbabwe');
+
+            insert into cities(name, rating, country_id)
+            values('Jacksonville', 4, 187),
+            ('Phnom Penh', 4, 5),
+            ('Reno', 5, 187);
+
         `).then(() => {
             console.log('DB seeded!')
             res.sendStatus(200)
         }).catch(err => console.log('error seeding DB', err))
+    },
+
+    getCountries: (req, res) => {
+        sequelize.query(`
+            SELECT * FROM countries;
+        `)
+        .then((dbResult) => {
+            res.status(200).send(dbResult[0])
+        })
+        .catch((error) => {
+            console.log('Could not load data country from database', error)
+            res.status(400).seed(error)
+        })
+    },
+
+    createCity: (req, res) => {
+        const { name, rating, countryId } = req.body
+        sequelize.query(`
+            INSERT INTO cities(name, rating, country_id)
+            VALUES('${name}', ${rating}, ${countryId});
+        `)
+        .then((dbResult) => {
+            res.status(200).send(dbResult[0])
+        })
+        .catch((error) => {
+            console.log('Could not insert data', error)
+            res.status(400).send(error)
+        })
+    },
+
+    getCities: (req, res) => {
+        sequelize.query(`
+            SELECT ci.city_id, ci.name city, rating, co.country_id, co.name country 
+            FROM cities ci
+            JOIN countries co ON ci.country_id = co.country_id
+            ORDER BY rating DESC;
+        `)
+        .then((dbResult) => {
+            res.status(200).send(dbResult[0])
+        })
+        .catch((error) => {
+            console.log('Could not load data country from database', error)
+            res.status(400).seed(error)
+        })
+    },
+
+    deleteCity: (req, res) => {
+        const { id } = req.params
+        sequelize.query(`
+            DELETE FROM cities WHERE city_id = ${id};
+        `)
+        .then((dbResult) => {
+            res.status(200).send(dbResult[0])
+        })
+        .catch((error) => {
+            console.log('Could not load data country from database', error)
+            res.status(400).seed(error)
+        })
     }
 }
