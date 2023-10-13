@@ -1,0 +1,44 @@
+1) Table: owners
+    - id integer serial primary key
+    - first_name varchar(25)
+    - last_name varchar(25)
+    - tel varchar(20)
+    - fax varchar(20)
+    - email varchar(50)
+    - address varchar(100)
+    - zip_code integer
+
+2) Table: animal_species
+    - id integer serial primary key
+    - name varchar(50)
+
+3) Table: animals 
+    - id integer serial primary key
+    - animal_species_id foreign key (relationship many - to - one)
+    - name varchar(50)
+    - gender varchar(7)
+    - age integer
+    - color varchar(100)
+    - height integer
+    - weight integer
+    - description varchar(250)
+
+4) Table: animal_owners 
+    - id integer serial primary key
+    - owner_id foreign key (relationship many - to - one)
+    - animal_id foreign key (relationship many - to - one)
+
+5) Table: galleries
+    - id integer serial primary key
+    - animal_id foreign key (relationship many - to - one)
+    - photo_url varchar(250)
+    - thumb_url varchar(250)
+
+6) Table: reviews 
+    - id integer serial primary key 
+    - animal_id foreign key (relationship many - to - one)
+    - name varchar(50)
+    - tel varchar(20)
+    - rating integer
+    - comment varchar(250)
+
